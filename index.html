@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Raju Basukala — Architect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:     #1a1a18;
+    --stone:   #6b6b65;
+    --mist:    #e8e6e0;
+    --paper:   #f4f2ec;
+    --cream:   #faf9f5;
+    --accent:  #2d4a3e;
+    --line:    rgba(26,26,24,0.12);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    background: var(--cream);
+    color: var(--ink);
+    font-size: 18px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ─── NOISE TEXTURE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.5;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.6rem 3rem;
+    background: rgba(250,249,245,0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    color: var(--stone);
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.8rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--stone);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--ink); }
+
+  /* ─── HERO ─── */
+  #hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 80px;
+    position: relative;
+  }
+
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 6rem 3rem 6rem 3rem;
+    border-right: 1px solid var(--line);
+  }
+
+  .hero-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero-name {
+    font-size: clamp(3.2rem, 6vw, 5.5rem);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    opacity: 0;
+    animation: fadeUp 0.9s 0.35s forwards;
+  }
+
+  .hero-name em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-tagline {
+    margin-top: 2.4rem;
+    font-size: 1.15rem;
+    font-weight: 300;
+    color: var(--stone);
+    max-width: 380px;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.55s forwards;
+  }
+
+  .hero-cta {
+    margin-top: 3.5rem;
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.7s forwards;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    padding: 0.85rem 2.2rem;
+    background: var(--accent);
+    color: #fff;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.25s, transform 0.2s;
+  }
+
+  .btn-primary:hover { background: var(--ink); transform: translateY(-1px); }
+
+  .btn-ghost {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--stone);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+    transition: color 0.2s;
+  }
+
+  .btn-ghost:hover { color: var(--ink); }
+
+  .hero-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 6rem 3rem;
+    opacity: 0;
+    animation: fadeIn 1.2s 0.6s forwards;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .stat-item {
+    padding: 2rem;
+    border-bottom: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+  }
+
+  .stat-item:nth-child(2n) { border-right: none; }
+  .stat-item:nth-last-child(-n+2) { border-bottom: none; }
+
+  .stat-number {
+    font-size: 3rem;
+    font-weight: 300;
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-top: 0.5rem;
+  }
+
+  /* ─── SECTIONS ─── */
+  section {
+    padding: 7rem 3rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+
+  .section-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--stone);
+  }
+
+  .section-title {
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 300;
+    letter-spacing: -0.01em;
+  }
+
+  .section-title em { font-style: italic; color: var(--accent); }
+
+  /* ─── ABOUT ─── */
+  #about .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .about-intro {
+    font-size: 1.35rem;
+    font-weight: 300;
+    line-height: 1.65;
+    color: var(--ink);
+  }
+
+  .about-intro strong {
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .about-body {
+    font-size: 1rem;
+    color: var(--stone);
+    line-height: 1.8;
+  }
+
+  .about-body p + p { margin-top: 1.2rem; }
+
+  /* ─── EXPERIENCE ─── */
+  #experience .exp-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .exp-item {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 3rem;
+    padding: 2.8rem 0;
+    border-bottom: 1px solid var(--line);
+    transition: background 0.2s;
+  }
+
+  .exp-item:first-child { border-top: 1px solid var(--line); }
+
+  .exp-meta {
+    padding-top: 0.2rem;
+  }
+
+  .exp-period {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--stone);
+    margin-bottom: 0.5rem;
+  }
+
+  .exp-org {
+    font-size: 0.85rem;
+    color: var(--stone);
+    font-style: italic;
+  }
+
+  .exp-role {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 1rem;
+  }
+
+  .exp-projects {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .exp-projects li {
+    font-size: 0.92rem;
+    color: var(--stone);
+    padding-left: 1.2rem;
+    position: relative;
+  }
+
+  .exp-projects li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 300;
+  }
+
+  /* ─── SELECTED WORKS ─── */
+  #works .works-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+
+  .work-card {
+    padding: 2.5rem;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+    cursor: default;
+  }
+
+  .work-card:hover { background: var(--paper); }
+
+  .work-card:hover .work-tag { color: var(--accent); }
+
+  .work-type {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-bottom: 1.2rem;
+  }
+
+  .work-title {
+    font-size: 1.05rem;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--ink);
+    margin-bottom: 0.8rem;
+  }
+
+  .work-location {
+    font-size: 0.85rem;
+    color: var(--stone);
+    font-style: italic;
+  }
+
+  .work-tag {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mist);
+    transition: color 0.3s;
+  }
+
+  /* ─── EDUCATION ─── */
+  #education .edu-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .edu-item {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 3rem;
+    padding: 2.5rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .edu-item:first-child { border-top: 1px solid var(--line); }
+
+  .edu-year {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--stone);
+    padding-top: 0.2rem;
+  }
+
+  .edu-degree {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.35rem;
+  }
+
+  .edu-inst {
+    font-size: 0.92rem;
+    color: var(--stone);
+  }
+
+  .edu-thesis {
+    margin-top: 0.6rem;
+    font-size: 0.88rem;
+    font-style: italic;
+    color: var(--stone);
+  }
+
+  /* ─── CONTACT ─── */
+  #contact {
+    background: var(--ink);
+    color: var(--cream);
+    border-top: none;
+  }
+
+  #contact .contact-inner {
+    max-width: 700px;
+  }
+
+  #contact .section-title { color: var(--cream); }
+  #contact .section-num { color: rgba(250,249,245,0.4); }
+
+  .contact-lead {
+    font-size: 1.3rem;
+    font-weight: 300;
+    color: rgba(250,249,245,0.75);
+    margin-bottom: 3.5rem;
+    line-height: 1.65;
+  }
+
+  .contact-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .contact-row {
+    display: flex;
+    align-items: baseline;
+    gap: 2rem;
+    padding: 1.4rem 0;
+    border-bottom: 1px solid rgba(250,249,245,0.1);
+  }
+
+  .contact-row:first-child { border-top: 1px solid rgba(250,249,245,0.1); }
+
+  .contact-key {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(250,249,245,0.35);
+    width: 120px;
+    flex-shrink: 0;
+  }
+
+  .contact-val {
+    font-size: 1rem;
+    color: rgba(250,249,245,0.8);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  a.contact-val:hover { color: #fff; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--ink);
+    border-top: 1px solid rgba(250,249,245,0.08);
+    padding: 2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-copy {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    color: rgba(250,249,245,0.25);
+  }
+
+  /* ─── SCROLL REVEAL ─── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.75s ease, transform 0.75s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ─── KEYFRAMES ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .nav-links { gap: 1.5rem; }
+
+    #hero { grid-template-columns: 1fr; min-height: auto; padding-top: 70px; }
+    .hero-left { padding: 4rem 1.5rem 3rem; border-right: none; border-bottom: 1px solid var(--line); }
+    .hero-right { padding: 3rem 1.5rem; }
+
+    section { padding: 4.5rem 1.5rem; }
+
+    #about .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+
+    .exp-item { grid-template-columns: 1fr; gap: 0.8rem; }
+    .edu-item { grid-template-columns: 1fr; gap: 0.4rem; }
+
+    .works-grid { grid-template-columns: 1fr 1fr !important; }
+
+    footer { flex-direction: column; gap: 0.8rem; text-align: center; }
+  }
+
+  @media (max-width: 600px) {
+    .works-grid { grid-template-columns: 1fr !important; }
+    .stat-grid { grid-template-columns: 1fr 1fr; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">Raju Basukala</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#works">Works</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-left">
+    <p class="hero-label">Principal Architect · Kathmandu, Nepal</p>
+    <h1 class="hero-name">Raju<br><em>Basukala</em></h1>
+    <p class="hero-tagline">Shaping built environments across Nepal — from science parks and hospitals to stadiums, schools, and sacred spaces.</p>
+    <div class="hero-cta">
+      <a href="#works" class="btn-primary">View Works</a>
+      <a href="#contact" class="btn-ghost">Get in Touch</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="stat-grid">
+      <div class="stat-item">
+        <div class="stat-number">15+</div>
+        <div class="stat-label">Years Practice</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">40+</div>
+        <div class="stat-label">Projects Delivered</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">3</div>
+        <div class="stat-label">Firms Led</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">M.Sc.</div>
+        <div class="stat-label">Construction Mgmt</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-header reveal">
+    <span class="section-num">01</span>
+    <h2 class="section-title">About <em>Me</em></h2>
+  </div>
+  <div class="about-grid">
+    <div class="about-intro reveal">
+      <strong>Principal Architect</strong> at Sustainable Buildscape, part-time faculty at Khwopa Engineering College, and an independent design voice in Nepal's built landscape for over fifteen years.
+    </div>
+    <div class="about-body reveal">
+      <p>My work spans the full spectrum of architectural practice — master planning, institutional design, healthcare facilities, educational campuses, hospitality, and civic infrastructure. I bring both design sensitivity and technical rigour to every project, informed by a Master's in Construction Management and a Bachelor of Architecture from Pulchowk Campus, T.U.</p>
+      <p>Alongside practice, I teach architectural design studios at Khwopa Engineering College, believing that the next generation of Nepali architects should be grounded in both craft and critical thinking. I am equally at home in collaborative consortium environments and in the focused intensity of independent freelance work.</p>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-header reveal">
+    <span class="section-num">02</span>
+    <h2 class="section-title">Experience</h2>
+  </div>
+  <div class="exp-list">
+
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-period">2019 — Present</div>
+        <div class="exp-org">Sustainable Buildscape Pvt. Ltd.</div>
+      </div>
+      <div>
+        <div class="exp-role">Principal Architect</div>
+        <ul class="exp-projects">
+          <li>Master plan of the Science Park at NAST, Khumaltar, Lalitpur</li>
+          <li>Design of the Main Gate at NAST</li>
+          <li>Covered Hall at New Town Khurkot</li>
+          <li>Main Office Building, Laxmi Sacoss</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-period">2019 — Present</div>
+        <div class="exp-org">Khwopa Engineering College</div>
+      </div>
+      <div>
+        <div class="exp-role">Lecturer — Part-time Faculty</div>
+        <ul class="exp-projects">
+          <li>Architectural Design Studio (T.U. Architecture I/I)</li>
+          <li>Architectural Design Studio (T.U. Architecture II/II)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-period">2015 — Present</div>
+        <div class="exp-org">Independent Practice</div>
+      </div>
+      <div>
+        <div class="exp-role">Project Architect — Freelance</div>
+        <ul class="exp-projects">
+          <li>Chandra Narayan Yadav Memorial Maternity Hospital, Siraha</li>
+          <li>Nawalpur Hospital, Sindhupalchowk</li>
+          <li>People's Dental College and Hospital, Kathmandu</li>
+          <li>Master Plan & Design — National Zoological Garden, Bhaktapur</li>
+          <li>Master Plan — Industrial Complex, Jadibuti Prasodhan Kendra, Bara</li>
+          <li>Martyr's Memorial Park</li>
+          <li>Langtang Cheese Factory, Langtang</li>
+          <li>Araniko Sabha Bhawan · Kalikot Covered Hall</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-period">2013 — 2019</div>
+        <div class="exp-org">Green Design Solution Pvt. Ltd.</div>
+      </div>
+      <div>
+        <div class="exp-role">Senior Architect & Director</div>
+        <ul class="exp-projects">
+          <li>Ananda Kuti Maha Vihar Master Plan, Swayambhu (coordination with Embassy of Sri Lanka & Dept. of Archaeology)</li>
+          <li>Itahari Hotel — Remodelling & Interior Design</li>
+          <li>Bagaincha Wellness Resort, Pokhara</li>
+          <li>Eurokids International School (now Aksara School), Kathmandu</li>
+          <li>Master Plans — Panch Pokhari, Indrawati, and Charikot Stadiums</li>
+          <li>Grand City Hotel, Biratnagar · Dolakha Resort · Multiple school buildings</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-period">2009 — 2012</div>
+        <div class="exp-org">Shah Consult International Pvt. Ltd.</div>
+      </div>
+      <div>
+        <div class="exp-role">Architect</div>
+        <ul class="exp-projects">
+          <li>Interior design of ~30 Bank of Kathmandu branch offices across Nepal</li>
+          <li>Detailed Survey & Design — Electrified Railway Line, Simara–Bardibas (CES-KRNA-KUNHWA-ICT-SCI-FBC Consortium)</li>
+          <li>National Identity Management Building, Ministry of Home Affairs, Singh Durbar</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-period">2007 — 2008</div>
+        <div class="exp-org">DUDBC, Babermahal</div>
+      </div>
+      <div>
+        <div class="exp-role">Architect Intern</div>
+        <ul class="exp-projects">
+          <li>Trainee architect under Deputy Director General Ar. Purusottam Dangol at the Department of Urban Development and Building Construction</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SELECTED WORKS -->
+<section id="works">
+  <div class="section-header reveal">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Selected <em>Works</em></h2>
+  </div>
+  <div class="works-grid reveal">
+
+    <div class="work-card">
+      <div class="work-type">Institutional · Master Plan</div>
+      <div class="work-title">Science Park, NAST</div>
+      <div class="work-location">Khumaltar, Lalitpur</div>
+      <span class="work-tag">2019–</span>
+    </div>
+
+    <div class="work-card">
+      <div class="work-type">Healthcare · Architecture</div>
+      <div class="work-title">People's Dental College & Hospital</div>
+      <div class="work-location">Kathmandu, Nepal</div>
+      <span class="work-tag">Freelance</span>
+    </div>
+
+    <div class="work-card">
+      <div class="work-type">Healthcare · Architecture</div>
+      <div class="work-title">Chandra Narayan Yadav Memorial Maternity Hospital</div>
+      <div class="work-location">Siraha, Nepal</div>
+      <span class="work-tag">Freelance</span>
+    </div>
+
+    <div class="work-card">
+      <div class="work-type">Civic · Master Plan</div>
+      <div class="work-title">National Zoological Garden</div>
+      <div class="work-location">Suryabinayak, Bhaktapur</div>
+      <span class="work-tag">DIGICON</span>
+    </div>
+
+    <div class="work-card">
+      <div class="work-type">Religious · Coordination</div>
+      <div class="work-title">Ananda Kuti Maha Vihar</div>
+      <div class="work-location">Swayambhu, Kathmandu</div>
+      <span class="work-tag">2013–2019</span>
+    </div>
+
+    <div class="work-card">
+      <div class="work-type">Hospitality · Architecture</div>
+      <div class="work-title">Bagaincha Wellness Resort</div>
+      <div class="work-location">Pokhara, Nepal</div>
+      <span class="work-tag">2013–2019</span>
+    </div>
+
+    <div class="work-card">
+      <div class="work-type">Infrastructure · Railway</div>
+      <div class="work-title">Electrified Railway Line Design</div>
+      <div class="work-location">Simara–Bardibas Section</div>
+      <span class="work-tag">SCI Consortium</span>
+    </div>
+
+    <div class="work-card">
+      <div class="work-type">Industrial · Master Plan</div>
+      <div class="work-title">Jadibuti Prasodhan Kendra</div>
+      <div class="work-location">Bara, Nepal</div>
+      <span class="work-tag">Freelance</span>
+    </div>
+
+    <div class="work-card">
+      <div class="work-type">Civic · Memorial</div>
+      <div class="work-title">Martyr's Memorial Park</div>
+      <div class="work-location">Nepal</div>
+      <span class="work-tag">DIGICON</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-header reveal">
+    <span class="section-num">04</span>
+    <h2 class="section-title">Education</h2>
+  </div>
+  <div class="edu-list">
+
+    <div class="edu-item reveal">
+      <div class="edu-year">2069–2072 B.S.<br>(~2012–2015)</div>
+      <div>
+        <div class="edu-degree">Master in Construction Management (M.Sc.)</div>
+        <div class="edu-inst">T.U., I.O.E., Pulchowk Campus — Lalitpur</div>
+        <div class="edu-thesis">Thesis: "A Study on the Key Factors Affecting Labor Productivity in Building Construction Projects of Nepal"</div>
+      </div>
+    </div>
+
+    <div class="edu-item reveal">
+      <div class="edu-year">2061–2066 B.S.<br>(~2004–2009)</div>
+      <div>
+        <div class="edu-degree">Bachelor of Architecture — with Distinction</div>
+        <div class="edu-inst">T.U., I.O.E., Pulchowk Campus — Lalitpur</div>
+        <div class="edu-thesis">Thesis: "Museum of Contemporary Arts, MOCA"</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Get in <em>Touch</em></h2>
+    </div>
+    <p class="contact-lead">Open to architectural commissions, collaborative projects, and consulting engagements across Nepal and the region.</p>
+    <div class="contact-items">
+      <div class="contact-row">
+        <span class="contact-key">Location</span>
+        <span class="contact-val">Kathmandu, Nepal</span>
+      </div>
+      <div class="contact-row">
+        <span class="contact-key">Practice</span>
+        <span class="contact-val">Sustainable Buildscape Pvt. Ltd.</span>
+      </div>
+      <div class="contact-row">
+        <span class="contact-key">Teaching</span>
+        <span class="contact-val">Khwopa Engineering College, Bhaktapur</span>
+      </div>
+      <div class="contact-row">
+        <span class="contact-key">Availability</span>
+        <span class="contact-val">Freelance & Consulting — open</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-copy">© 2025 Raju Basukala. All rights reserved.</span>
+  <span class="footer-copy">Architect · Educator · Nepal</span>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        entry.target.style.transitionDelay = (i * 0.05) + 's';
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
